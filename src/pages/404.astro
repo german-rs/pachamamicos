@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Boton from '../components/ui/Boton.astro';
+---
+
+<BaseLayout
+  title="Página no encontrada"
+  description="La página que buscas no existe o cambió de lugar."
+  noindex
+>
+  <section class="mx-auto flex max-w-contenido flex-col items-center px-5 py-16 text-center md:px-8 md:py-24">
+    <!-- Carita-sol: decoración, sin significado -->
+<svg
+  viewBox="0 0 64 64"
+  width="112"
+  height="112"
+  class="-rotate-6 md:size-36"
+  aria-hidden="true"
+>
+  <circle cx="32" cy="32" r="28" fill="#FFD93D" stroke="#0F0D14" stroke-width="4" />
+  <circle cx="23" cy="26" r="3.5" fill="#0F0D14" />
+  <circle cx="41" cy="26" r="3.5" fill="#0F0D14" />
+  <path
+    d="M19 38c3 8 23 8 26 0"
+    fill="none"
+    stroke="#0F0D14"
+    stroke-width="4"
+    stroke-linecap="round"
+  />
+</svg>
+
+    <p class="mt-8 rounded-full border-2 border-lima bg-superficie px-3 py-1 font-titulo text-micro font-medium uppercase text-lima">
+      Error 404
+    </p>
+
+    <h1 class="mt-4 max-w-2xl font-titulo text-h1 font-bold">
+      Esta página no existe (o se fue a meditar)
+    </h1>
+
+    <p class="mt-4 max-w-lectura text-cuerpo text-texto-suave">
+      Puede que el enlace haya cambiado o tenga un error. Vuelve al inicio o mira las guías.
+    </p>
+
+    <div class="mt-8 flex flex-wrap justify-center gap-4">
+      <Boton href="/">Volver al inicio</Boton>
+      <Boton href="/guias/" variante="secundario">Ver las guías</Boton>
+    </div>
+  </section>
+</BaseLayout>

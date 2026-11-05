@@ -1,0 +1,49 @@
+---
+import { site, institucional, instagram } from '../../data/site';
+import Boton from '../ui/Boton.astro';
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-borde bg-superficie">
+  <div class="mx-auto grid max-w-contenido gap-10 px-5 py-12 md:grid-cols-3 md:px-8">
+    <div>
+      <p class="font-logo text-3xl leading-none text-lima">pachamamicos</p>
+      <p class="mt-4 max-w-xs text-chico text-texto-suave">
+        Eventos, guías y textos de meditación y mindfulness en Chile. Hecho con cariño por el Equipo Pachamamicos.
+      </p>
+    </div>
+
+    <nav aria-label="Páginas del proyecto">
+      <p class="font-titulo font-semibold">El proyecto</p>
+      <ul class="mt-3 space-y-1">
+        {institucional.map((item) => (
+          <li>
+            <a href={item.href} class="inline-flex min-h-11 items-center text-chico text-texto-suave underline hover:text-amarillo">
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div>
+      <p class="font-titulo font-semibold">Comunidad</p>
+      <ul class="mt-3 space-y-1">
+        {instagram && (
+          <li>
+            <a href={instagram} rel="noopener" class="inline-flex min-h-11 items-center text-chico text-texto-suave underline hover:text-amarillo">
+              Instagram
+            </a>
+          </li>
+        )}
+      </ul>
+        <Boton href="/apoya/" class="mt-4">Apoya pachamamicos</Boton>
+    </div>
+  </div>
+
+  <div class="border-t border-borde">
+    <p class="mx-auto max-w-contenido px-5 py-5 text-micro text-texto-suave md:px-8">
+      © {year} Equipo {site.name}. Este sitio es desarrollado por <a href="https://germanriveros.cl">Germán Riveros</a>
+    </p>
+  </div>
+</footer>

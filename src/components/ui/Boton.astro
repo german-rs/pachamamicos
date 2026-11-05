@@ -1,0 +1,24 @@
+---
+interface Props {
+  href: string;
+  variante?: 'principal' | 'secundario';
+  class?: string;
+}
+
+const { href, variante = 'principal', class: extra } = Astro.props;
+
+// Las clases van completas para que Tailwind las detecte
+const base =
+  'inline-flex min-h-11 items-center rounded-full px-5 py-2 font-titulo font-semibold transition duration-150 motion-reduce:transition-none';
+
+const variantes = {
+  principal:
+    'border-[3px] border-tinta bg-amarillo text-tinta shadow-dura hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-dura-hover active:translate-x-0 active:translate-y-0 active:shadow-none',
+  secundario:
+    'border-[3px] border-texto text-texto hover:border-amarillo hover:bg-superficie-2 hover:text-amarillo',
+};
+---
+
+<a href={href} class:list={[base, variantes[variante], extra]}>
+  <slot />
+</a>

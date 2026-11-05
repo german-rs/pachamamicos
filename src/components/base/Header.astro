@@ -1,0 +1,64 @@
+---
+import { nav } from '../../data/site';
+import Boton from '../ui/Boton.astro';
+
+const path = Astro.url.pathname;
+const activo = (href: string) => path.startsWith(href);
+---
+
+<header class="relative border-b border-borde bg-fondo">
+  <div class="mx-auto flex max-w-contenido items-center justify-between gap-4 px-5 py-3 md:px-8">
+    <a href="/" class="font-logo text-3xl leading-none text-lima" aria-label="Pachamamicos, ir al inicio">
+      pachamamicos
+    </a>
+
+    <!-- Escritorio -->
+    <nav class="hidden items-center gap-6 md:flex" aria-label="Principal">
+      {nav.map((item) => (
+        <a
+          href={item.href}
+          aria-current={activo(item.href) ? 'page' : undefined}
+          class:list={[
+            'py-2 font-titulo font-semibold hover:text-amarillo',
+            activo(item.href) && `underline decoration-wavy decoration-2 underline-offset-8 ${item.color}`,
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+    <Boton href="/apoya/">Apoya</Boton>
+    </nav>
+
+    <!-- Móvil: sin JavaScript, con <details> -->
+    <details class="group md:hidden">
+      <summary
+        class="flex min-h-11 cursor-pointer list-none items-center rounded-full border-2 border-texto px-5 font-titulo font-semibold [&::-webkit-details-marker]:hidden"
+      >
+        <span class="group-open:hidden">Menú</span>
+        <span class="hidden group-open:inline">Cerrar</span>
+      </summary>
+
+      <nav
+        class="absolute inset-x-0 top-full z-40 border-b border-borde bg-superficie px-5 py-4"
+        aria-label="Principal"
+      >
+        <ul class="flex flex-col">
+          {nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={activo(item.href) ? 'page' : undefined}
+                class="flex min-h-12 items-center font-titulo text-h3 font-semibold hover:text-amarillo"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+            <li class="pt-3">
+                <Boton href="/apoya/">Apoya pachamamicos</Boton>
+            </li>
+        </ul>
+      </nav>
+    </details>
+  </div>
+</header>
