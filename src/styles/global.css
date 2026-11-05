@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+@theme {
+  /* Paleta cerrada: se elimina la de Tailwind */
+  --color-*: initial;
+
+  /* Superficies y texto */
+  --color-fondo: #0F0D14;
+  --color-superficie: #1A1722;
+  --color-superficie-2: #26212F;
+  --color-borde: #6B6280;
+  --color-texto: #F2EEE6;
+  --color-texto-suave: #BFB8CC;
+  --color-tinta: #0F0D14;
+
+  /* Acentos */
+  --color-celeste: #4CC9F0;
+  --color-lima: #B6F23A;
+  --color-violeta: #B794F6;
+  --color-rosa: #FF7BC0;
+  --color-amarillo: #FFD93D;
+  --color-error: #FF8A80;
+
+  /* Tipografía (las fuentes se cargan en el paso 3) */
+--font-logo: "Ranchers", "Arial Rounded MT Bold", system-ui, sans-serif;
+--font-titulo: "DynaPuff Variable", "Arial Rounded MT Bold", system-ui, sans-serif;
+--font-texto: "Nunito Sans Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --text-hero: clamp(2.75rem, 1.5rem + 6vw, 5rem);
+  --text-hero--line-height: 1.05;
+  --text-h1: clamp(2.25rem, 1.6rem + 3vw, 3.75rem);
+  --text-h1--line-height: 1.1;
+  --text-h2: clamp(1.5rem, 1.25rem + 1.2vw, 2.125rem);
+  --text-h2--line-height: 1.2;
+  --text-h3: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --text-h3--line-height: 1.3;
+  --text-cuerpo: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --text-cuerpo--line-height: 1.7;
+  --text-chico: 0.9375rem;
+  --text-chico--line-height: 1.5;
+  --text-micro: 0.8125rem;
+  --text-micro--line-height: 1.4;
+
+  /* Forma */
+  --radius-s: 8px;
+  --radius-m: 16px;
+  --radius-l: 24px;
+  --shadow-dura: 6px 6px 0 #F2EEE6;
+  --shadow-dura-hover: 8px 8px 0 #F2EEE6;
+
+  /* Layout */
+  --container-contenido: 70rem;
+  --container-lectura: 68ch;
+  --breakpoint-md: 60rem;
+  --breakpoint-lg: 75rem;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: var(--font-texto);
+    font-synthesis: none;
+  }
+  body {
+    font-size: var(--text-cuerpo);
+    line-height: 1.7;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-amarillo);
+    outline-offset: 3px;
+  }
+  ::selection {
+    background: var(--color-amarillo);
+    color: var(--color-tinta);
+  }
+}
+
+/* Color de la sección actual (se usa en los layouts) */
+.seccion-blog   { --c-seccion: var(--color-celeste); }
+.seccion-guias  { --c-seccion: var(--color-lima); }
+.seccion-textos { --c-seccion: var(--color-violeta); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}

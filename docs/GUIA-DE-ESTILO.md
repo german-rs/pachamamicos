@@ -1,9 +1,30 @@
 # Pachamamicos · Guía de estilo
 
-> **Versión:** 1.0 · **Aplica a:** sitio web (Fase 1, blog) · **Tema:** oscuro, único
+> **Versión:** 1.1 (adaptada a Tailwind CSS v4) · **Aplica a:** sitio web (Fase 1, blog) · **Tema:** oscuro, único
 > **Documento hermano:** [`ARQUITECTURA.md`](./ARQUITECTURA.md)
 
 ---
+
+### Cómo leer los tokens en esta guía
+
+El sitio usa **Tailwind CSS v4** con los tokens definidos en `@theme` (ver sección 13 y `ARQUITECTURA.md`, sección 3.1). En el texto de la guía se usan nombres cortos (`--fondo`, `--celeste`, `--e-5`); en el código son variables de tema que generan utilidades de Tailwind:
+
+| En esta guía | Variable en el tema | Utilidades de Tailwind |
+|---|---|---|
+| `--fondo`, `--texto`, `--celeste`… | `--color-fondo`, `--color-texto`, `--color-celeste`… | `bg-fondo`, `text-texto`, `border-celeste`… |
+| `--f-display`, `--f-acento`, `--f-texto` | `--font-display`, `--font-acento`, `--font-texto` | `font-display`, `font-acento`, `font-texto` |
+| `--t-hero`, `--t-h1`, `--t-cuerpo`… | `--text-hero`, `--text-h1`, `--text-cuerpo`… | `text-hero`, `text-h1`, `text-cuerpo`… |
+| `--e-1` a `--e-9` | Escala de espaciado estándar de Tailwind | `p-1`, `p-2`, `p-3`, `p-4`, `p-6`, `p-8`, `p-12`, `p-16`, `p-24` |
+| `--radio-s`, `--radio-m`, `--radio-l` | `--radius-s`, `--radius-m`, `--radius-l` | `rounded-s`, `rounded-m`, `rounded-l` (y `rounded-full` para píldora) |
+| `--sombra-dura` | `--shadow-dura`, `--shadow-dura-hover` | `shadow-dura`, `hover:shadow-dura-hover` |
+| `--ancho-max`, `--ancho-lectura` | `--container-contenido`, `--container-lectura` | `max-w-contenido`, `max-w-lectura` |
+
+**Reglas para escribir clases**
+
+1. **Nada de colores en hex dentro de las clases.** Siempre un token (`bg-celeste`, no `bg-[#4CC9F0]`). Así el contraste verificado se respeta en todo el sitio.
+2. **Las clases se escriben completas**, nunca armadas por partes (`bg-${color}` no funciona: Tailwind no las detecta). Para variar por sección se usa un mapa con las clases completas.
+3. **Un solo tema oscuro**: no hay variantes `dark:`.
+4. **Los patrones repetidos son componentes de Astro** (tarjeta, chip, botón), no clases con `@apply`.
 
 ## 1. Esencia de marca
 
@@ -117,6 +138,7 @@ Calculado con la fórmula de luminancia relativa de WCAG 2.x.
 - **Nunca dos acentos vivos pegados sin separación** (ej. rosa junto a lima sin borde ni espacio): vibran.
 - **Máximo dos acentos distintos por pantalla**, más el amarillo de acción.
 - El **color nunca es el único portador de significado**: acompañar con texto o icono.
+- En código, **solo tokens** (`bg-lima`, `text-tinta`); no se escriben valores hex en las clases.
 
 ### 3.6 Estados
 
@@ -169,6 +191,8 @@ Nunito Sans se elige por ser redondeada y limpia, en armonía con las otras dos,
 | `--t-chico` | `0.9375rem` | 1,5 | Metadatos |
 | `--t-micro` | `0.8125rem` | 1,4 | Etiquetas, pies de foto |
 
+En el tema, cada tamaño tiene su utilidad (`text-hero`, `text-h1`, `text-h2`, `text-h3`, `text-cuerpo`, `text-chico`, `text-micro`) con su interlineado asociado.
+
 ### 4.4 Reglas
 
 - **Cuerpo mínimo 17 px.** Nada de párrafos en tamaños menores.
@@ -187,44 +211,50 @@ Nunito Sans se elige por ser redondeada y limpia, en armonía con las otras dos,
 - Pilas de respaldo:
 
 ```css
---f-display: "Ranchers", "Arial Rounded MT Bold", system-ui, sans-serif;
---f-acento:  "DynaPuff", "Arial Rounded MT Bold", system-ui, sans-serif;
---f-texto:   "Nunito Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+/* en @theme */
+--font-display: "Ranchers", "Arial Rounded MT Bold", system-ui, sans-serif;
+--font-acento:  "DynaPuff", "Arial Rounded MT Bold", system-ui, sans-serif;
+--font-texto:   "Nunito Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 ```
+
+- Las fuentes se importan en `BaseLayout.astro` desde `@fontsource` (no desde un CDN).
 
 ## 5. Espaciado, bordes y sombras
 
 ### 5.1 Escala de espacio (base 4 px)
 
-| Token | Valor | Uso típico |
-|---|---|---|
-| `--e-1` | 4 px | Separación mínima |
-| `--e-2` | 8 px | Entre icono y texto |
-| `--e-3` | 12 px | Relleno de chips |
-| `--e-4` | 16 px | Relleno de botones |
-| `--e-5` | 24 px | Relleno de tarjetas, separación entre párrafos |
-| `--e-6` | 32 px | Entre bloques |
-| `--e-7` | 48 px | Entre secciones en móvil |
-| `--e-8` | 64 px | Entre secciones |
-| `--e-9` | 96 px | Entre secciones grandes en escritorio |
+Se usa la **escala estándar de Tailwind**, que ya tiene base de 4 px.
+
+| Token de la guía | Valor | Utilidad Tailwind | Uso típico |
+|---|---|---|---|
+| `--e-1` | 4 px | `1` (`p-1`, `gap-1`) | Separación mínima |
+| `--e-2` | 8 px | `2` | Entre icono y texto |
+| `--e-3` | 12 px | `3` | Relleno de chips |
+| `--e-4` | 16 px | `4` | Relleno de botones |
+| `--e-5` | 24 px | `6` | Relleno de tarjetas, separación entre párrafos |
+| `--e-6` | 32 px | `8` | Entre bloques |
+| `--e-7` | 48 px | `12` | Entre secciones en móvil |
+| `--e-8` | 64 px | `16` | Entre secciones |
+| `--e-9` | 96 px | `24` | Entre secciones grandes en escritorio |
 
 ### 5.2 Bordes y radios
 
-| Token | Valor |
-|---|---|
-| `--radio-s` | 8 px |
-| `--radio-m` | 16 px |
-| `--radio-l` | 24 px |
-| `--radio-pill` | 999 px |
-| `--borde-grueso` | 3 px sólido `--tinta` |
+| Token | Valor | Utilidad Tailwind |
+|---|---|---|
+| `--radio-s` | 8 px | `rounded-s` |
+| `--radio-m` | 16 px | `rounded-m` |
+| `--radio-l` | 24 px | `rounded-l` |
+| `--radio-pill` | 999 px | `rounded-full` |
+| Borde grueso | 3 px sólido `--tinta` | `border-[3px] border-tinta` |
 
 ### 5.3 Sombra dura (firma visual)
 
 Estilo "recortable", sin desenfoque:
 
 ```css
---sombra-dura: 6px 6px 0 var(--texto);
---sombra-dura-hover: 8px 8px 0 var(--texto);
+/* en @theme */
+--shadow-dura: 6px 6px 0 #F2EEE6;       /* utilidad: shadow-dura */
+--shadow-dura-hover: 8px 8px 0 #F2EEE6; /* utilidad: hover:shadow-dura-hover */
 ```
 
 Como el fondo es oscuro, la sombra va en **crema**, no en negro (una sombra negra no se ve). Si al probarlo se siente muy fuerte, se puede cambiar a una versión con el acento de la sección.
@@ -233,11 +263,11 @@ Como el fondo es oscuro, la sombra va en **crema**, no en negro (una sombra negr
 
 | Elemento | Valor |
 |---|---|
-| Ancho máximo de contenido | 1120 px |
-| Columna de lectura | 68 ch (aprox. 680–720 px) |
-| Grilla de tarjetas | 1 columna en móvil, 2 en tablet, 3 en escritorio, `gap: var(--e-5)` |
-| Margen lateral | 20 px móvil, 32 px escritorio |
-| Puntos de quiebre | 640 px, 960 px, 1200 px |
+| Ancho máximo de contenido | 1120 px (`max-w-contenido`) |
+| Columna de lectura | 68 ch, aprox. 680–720 px (`max-w-lectura`) |
+| Grilla de tarjetas | 1 columna en móvil, 2 en tablet, 3 en escritorio: `grid gap-6 sm:grid-cols-2 lg:grid-cols-3` |
+| Margen lateral | 20 px móvil, 32 px escritorio: `px-5 md:px-8` |
+| Puntos de quiebre | `sm` 640 px, `md` 960 px, `lg` 1200 px (ajustados en `@theme`) |
 
 ## 6. Elementos "hechos a mano" (CSS y SVG)
 
@@ -248,6 +278,8 @@ Como el fondo es oscuro, la sombra va en **crema**, no en negro (una sombra negr
 - Todo elemento decorativo lleva `aria-hidden="true"` y `pointer-events: none`.
 - Los stickers viven en **un sprite SVG** (`<symbol>`) reutilizado con `<use>`; el sprite total pesa menos de 20 KB.
 - Cada SVG individual, menos de 2 KB, sin degradados complejos ni filtros pesados.
+
+> **Dónde viven:** las formas con `clip-path` (cinta y papel rasgado) son clases propias en `src/styles/global.css`, porque sus polígonos son largos para escribirlos en línea. Las rotaciones, sombras y colores se aplican con utilidades de Tailwind.
 
 ### 6.2 Cinta adhesiva
 
@@ -282,30 +314,37 @@ Como el fondo es oscuro, la sombra va en **crema**, no en negro (una sombra negr
 
 ### 6.4 Tarjeta tipo nota pegada
 
-```css
-.tarjeta {
-  --c: var(--celeste);            /* color de la sección */
-  position: relative;
-  background: var(--c);
-  color: var(--tinta);
-  border: var(--borde-grueso);
-  border-radius: var(--radio-m);
-  box-shadow: var(--sombra-dura);
-  padding: var(--e-5);
-  transform: rotate(var(--giro, 0deg));
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-.tarjeta:hover,
-.tarjeta:focus-within {
-  transform: translate(-2px, -2px) rotate(0deg);
-  box-shadow: var(--sombra-dura-hover);
-}
-@media (prefers-reduced-motion: reduce) {
-  .tarjeta { transition: none; }
-}
+Se implementa como componente de Astro. Las clases van completas para que Tailwind las detecte.
+
+```astro
+---
+// src/components/ui/Tarjeta.astro
+const { seccion = 'blog', indice = 0, href, titulo, bajada } = Astro.props;
+
+const color = {
+  blog: 'bg-celeste',
+  guias: 'bg-lima',
+  textos: 'bg-violeta',
+}[seccion];
+
+// Giros repartidos por posición: collage sin aleatoriedad (build determinista)
+const giros = ['rotate-0', '-rotate-[1.5deg]', 'rotate-[1deg]', '-rotate-[0.5deg]'];
+const giro = giros[indice % giros.length];
+---
+<a
+  href={href}
+  class={`relative block rounded-m border-[3px] border-tinta p-6 text-tinta shadow-dura
+    transition duration-150 motion-reduce:transition-none
+    hover:-translate-x-0.5 hover:-translate-y-0.5 hover:rotate-0 hover:shadow-dura-hover
+    focus-visible:-translate-x-0.5 focus-visible:-translate-y-0.5 focus-visible:rotate-0
+    ${color} ${giro}`}
+>
+  <h3 class="font-display text-h3">{titulo}</h3>
+  <p class="mt-3 text-chico">{bajada}</p>
+</a>
 ```
 
-Los giros se reparten por posición en la grilla (`-1.5deg`, `0deg`, `1deg`, `-0.5deg`…) para dar sensación de collage sin aleatoriedad (el build debe ser determinista).
+Reglas: giro máximo ±2°, el hover quita el giro, y con `prefers-reduced-motion` desaparece la transición.
 
 ### 6.5 Stickers sugeridos (en SVG propio)
 
@@ -353,9 +392,27 @@ Favicon de partida (editable):
 - Hover: se desplaza (`translate(-2px,-2px)`) y crece la sombra dura. Active: vuelve a su sitio y la sombra desaparece.
 - Un solo botón principal por pantalla.
 
+```astro
+<a
+  href="/apoya/"
+  class="inline-flex min-h-11 items-center rounded-full border-[3px] border-tinta bg-amarillo px-5 py-3
+         font-acento font-semibold text-tinta shadow-dura transition duration-150 motion-reduce:transition-none
+         hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-dura-hover
+         active:translate-x-0 active:translate-y-0 active:shadow-none"
+>
+  Apoya pachamamicos
+</a>
+```
+
 ### 8.2 Chips (categorías y etiquetas)
 
 Píldora con borde 2 px del color de la sección, texto en el mismo color, fondo `--superficie`, DynaPuff 500, tamaño `--t-micro`, mayúsculas permitidas.
+
+```astro
+<span class="rounded-full border-2 border-celeste bg-superficie px-3 py-1 font-acento text-micro font-medium uppercase text-celeste">
+  Blog
+</span>
+```
 
 ### 8.3 Tarjeta de artículo
 
@@ -436,6 +493,8 @@ Campo con fondo `--superficie`, borde 2 px `--borde`, radio `--radio-s`, etiquet
 ```
 
 ### 9.2 Reglas del cuerpo (`.prose`)
+
+Se implementan en `src/styles/prose.css` con CSS propio sobre las variables del tema (por ejemplo `var(--color-celeste)` para los enlaces). No se escriben utilidades dentro del Markdown.
 
 | Elemento | Regla |
 |---|---|
@@ -544,84 +603,96 @@ Alternativas: "puede ayudarte a", "muchas personas reportan", "una práctica par
 | Eventos (futuro) | "Pronto: todos los eventos en un solo lugar" |
 | Pie de página | "Hecho con cariño por el Equipo Pachamamicos" |
 
-## 13. Tokens CSS (punto de partida)
+## 13. Tokens (Tailwind `@theme`)
 
-Archivo `src/styles/tokens.css`:
+Archivo `src/styles/global.css`. Es el punto de partida y debe mantenerse idéntico al de `ARQUITECTURA.md`, sección 3.1.
 
 ```css
-:root {
-  color-scheme: dark;
+@import "tailwindcss";
+
+@theme {
+  /* Paleta cerrada: se elimina la de Tailwind */
+  --color-*: initial;
 
   /* Superficies y texto */
-  --fondo: #0F0D14;
-  --superficie: #1A1722;
-  --superficie-2: #26212F;
-  --borde: #6B6280;
-  --texto: #F2EEE6;
-  --texto-suave: #BFB8CC;
-  --tinta: #0F0D14;
+  --color-fondo: #0F0D14;
+  --color-superficie: #1A1722;
+  --color-superficie-2: #26212F;
+  --color-borde: #6B6280;
+  --color-texto: #F2EEE6;
+  --color-texto-suave: #BFB8CC;
+  --color-tinta: #0F0D14;
 
   /* Acentos */
-  --celeste: #4CC9F0;
-  --lima: #B6F23A;
-  --violeta: #B794F6;
-  --rosa: #FF7BC0;
-  --amarillo: #FFD93D;
-  --error: #FF8A80;
-
-  /* Color por sección (se sobrescribe en cada layout) */
-  --c-seccion: var(--celeste);
+  --color-celeste: #4CC9F0;
+  --color-lima: #B6F23A;
+  --color-violeta: #B794F6;
+  --color-rosa: #FF7BC0;
+  --color-amarillo: #FFD93D;
+  --color-error: #FF8A80;
 
   /* Tipografía */
-  --f-display: "Ranchers", "Arial Rounded MT Bold", system-ui, sans-serif;
-  --f-acento: "DynaPuff", "Arial Rounded MT Bold", system-ui, sans-serif;
-  --f-texto: "Nunito Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Ranchers", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --font-acento: "DynaPuff", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --font-texto: "Nunito Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
-  --t-hero: clamp(2.75rem, 1.5rem + 6vw, 5rem);
-  --t-h1: clamp(2.25rem, 1.6rem + 3vw, 3.75rem);
-  --t-h2: clamp(1.5rem, 1.25rem + 1.2vw, 2.125rem);
-  --t-h3: clamp(1.25rem, 1.15rem + .5vw, 1.5rem);
-  --t-cuerpo: clamp(1.0625rem, 1rem + .3vw, 1.1875rem);
-  --t-chico: .9375rem;
-  --t-micro: .8125rem;
-
-  /* Espacio */
-  --e-1: 4px;  --e-2: 8px;  --e-3: 12px; --e-4: 16px; --e-5: 24px;
-  --e-6: 32px; --e-7: 48px; --e-8: 64px; --e-9: 96px;
+  --text-hero: clamp(2.75rem, 1.5rem + 6vw, 5rem);
+  --text-hero--line-height: 1;
+  --text-h1: clamp(2.25rem, 1.6rem + 3vw, 3.75rem);
+  --text-h1--line-height: 1.05;
+  --text-h2: clamp(1.5rem, 1.25rem + 1.2vw, 2.125rem);
+  --text-h2--line-height: 1.2;
+  --text-h3: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --text-h3--line-height: 1.3;
+  --text-cuerpo: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --text-cuerpo--line-height: 1.7;
+  --text-chico: 0.9375rem;
+  --text-chico--line-height: 1.5;
+  --text-micro: 0.8125rem;
+  --text-micro--line-height: 1.4;
 
   /* Forma */
-  --radio-s: 8px;
-  --radio-m: 16px;
-  --radio-l: 24px;
-  --radio-pill: 999px;
-  --borde-grueso: 3px solid var(--tinta);
-  --sombra-dura: 6px 6px 0 var(--texto);
-  --sombra-dura-hover: 8px 8px 0 var(--texto);
+  --radius-s: 8px;
+  --radius-m: 16px;
+  --radius-l: 24px;
+  --shadow-dura: 6px 6px 0 #F2EEE6;
+  --shadow-dura-hover: 8px 8px 0 #F2EEE6;
 
   /* Layout */
-  --ancho-max: 1120px;
-  --ancho-lectura: 68ch;
+  --container-contenido: 70rem;   /* 1120 px */
+  --container-lectura: 68ch;
+  --breakpoint-md: 60rem;         /* 960 px */
+  --breakpoint-lg: 75rem;         /* 1200 px */
 }
 
-/* Colores de sección: se aplican en el layout correspondiente */
-.seccion-blog   { --c-seccion: var(--celeste); }
-.seccion-guias  { --c-seccion: var(--lima); }
-.seccion-textos { --c-seccion: var(--violeta); }
-
-html {
-  background: var(--fondo);
-  color: var(--texto);
-  font-family: var(--f-texto);
-  font-size: 100%;
-  font-synthesis: none;
+@layer base {
+  html {
+    color-scheme: dark;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: var(--font-texto);
+    font-synthesis: none;
+  }
+  body {
+    font-size: var(--text-cuerpo);
+    line-height: 1.7;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-amarillo);
+    outline-offset: 3px;
+  }
+  ::selection {
+    background: var(--color-amarillo);
+    color: var(--color-tinta);
+  }
 }
-body { font-size: var(--t-cuerpo); line-height: 1.7; }
 
-:focus-visible {
-  outline: 3px solid var(--amarillo);
-  outline-offset: 3px;
-}
-::selection { background: var(--amarillo); color: var(--tinta); }
+/* Color de la sección actual (se aplica en el layout correspondiente) */
+.seccion-blog   { --c-seccion: var(--color-celeste); }
+.seccion-guias  { --c-seccion: var(--color-lima); }
+.seccion-textos { --c-seccion: var(--color-violeta); }
+
+/* Decoración con clip-path: .cinta y .borde-rasgado (ver secciones 6.2 y 6.3) */
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -631,6 +702,10 @@ body { font-size: var(--t-cuerpo); line-height: 1.7; }
   }
 }
 ```
+
+**Uso del color de sección:** el elemento que lo necesite lee la variable con la sintaxis de Tailwind v4, por ejemplo `border-(--c-seccion)` o `text-(--c-seccion)`. Para tarjetas conviene el mapa de clases completas de la sección 6.4.
+
+> Los nombres de las variables y la sintaxis de `@theme` corresponden a Tailwind v4. Confirma en la documentación vigente al instalar, sobre todo `--color-*: initial` y los nombres de `--text-*`, `--container-*` y `--breakpoint-*`.
 
 ## 14. Checklist de revisión visual
 
@@ -644,6 +719,8 @@ Antes de dar por terminada una página:
 - [ ] ¿Se ve el foco al navegar con teclado?
 - [ ] ¿Los títulos largos siguen cómodos en Ranchers?
 - [ ] ¿La página cumple el presupuesto de peso (ver arquitectura, sección 10)?
+- [ ] ¿Las clases usan solo tokens del tema (sin hex sueltos ni clases armadas dinámicamente)?
+- [ ] ¿Los patrones repetidos están en un componente y no copiados?
 - [ ] ¿El tono evita promesas de sanación?
 - [ ] ¿Hay aviso de afiliados si corresponde?
 
@@ -656,7 +733,8 @@ Antes de dar por terminada una página:
 | Nunito Sans vs Atkinson Hyperlegible | Elegir según peso y lectura en móvil |
 | Carita-sol como mascota | Validar que transmite calidez sin infantilizar |
 | Mayúsculas en chips | Comprobar legibilidad en 13 px |
+| Prose propio vs `@tailwindcss/typography` | Decidir al armar la primera plantilla de artículo |
 
 ---
 
-*Esta guía es un documento vivo. Cada cambio de color, tipografía o componente se registra aquí y, si afecta la estructura, en el registro de decisiones de `ARQUITECTURA.md`.*
+*Esta guía es un documento vivo. Cada cambio de color, tipografía o componente se registra aquí y, si afecta la estructura, en el registro de decisiones de `ARQUITECTURA.md`. Los tokens de la sección 13 y los de `ARQUITECTURA.md` (sección 3.1) deben mantenerse sincronizados.*

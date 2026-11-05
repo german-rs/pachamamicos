@@ -1,6 +1,6 @@
 # Pachamamicos · Documentación de arquitectura
 
-> **Versión:** 1.0 · **Fase:** 1 (blog) · **Sitio:** https://pachamamicos.cl · **Repo:** german-rs/pachamamicos
+> **Versión:** 1.1 (incorpora Tailwind CSS) · **Fase:** 1 (blog) · **Sitio:** https://pachamamicos.cl · **Repo:** german-rs/pachamamicos
 > **Documento hermano:** [`GUIA-DE-ESTILO.md`](./GUIA-DE-ESTILO.md)
 
 ---
@@ -23,7 +23,7 @@ Pachamamicos es un medio digital en español de Chile que reúne eventos de medi
 
 1. **Estático primero.** Todo se genera en build. Cero servidores propios.
 2. **Cero JavaScript por defecto.** Solo se agrega JS cuando una función lo exige (islas de Astro, más adelante en el calendario).
-3. **Ligero siempre.** Sin fotos pesadas, sin ilustraciones de pago. Stickers, texturas y decoración en SVG y CSS.
+3. **Ligero siempre.** Sin fotos pesadas, sin ilustraciones de pago. Stickers, texturas y decoración en SVG y CSS. Con Tailwind solo se genera el CSS de las clases que se usan.
 4. **Una persona puede mantenerlo.** Publicar = crear un archivo Markdown, hacer commit y listo.
 5. **SEO por diseño.** Los metadatos salen del esquema del contenido, no de memoria.
 6. **Accesible por defecto.** Tema oscuro con contraste verificado, foco visible, estructura semántica.
@@ -35,7 +35,7 @@ Pachamamicos es un medio digital en español de Chile que reúne eventos de medi
 |---|---|---|
 | Framework | **Astro** (versión estable vigente) | Sitio estático, content collections |
 | Contenido | **Markdown / MDX** | MDX solo si hace falta un componente dentro del texto |
-| Estilos | **CSS propio con variables** (tokens) | Sin framework CSS. Ver guía de estilo |
+| Estilos | **Tailwind CSS v4** | Tokens definidos en `@theme`. Ver sección 3.1 y la guía de estilo |
 | Fuentes | **Autoalojadas** (`@fontsource`, subset latin) | Sin Google Fonts en runtime |
 | Imágenes | `astro:assets` (sharp) | AVIF/WebP, tamaños responsivos |
 | Sitemap | `@astrojs/sitemap` | |
@@ -46,6 +46,94 @@ Pachamamicos es un medio digital en español de Chile que reúne eventos de medi
 | Futuro | Supabase | Solo Fase calendario |
 
 > **Verificar al implementar:** en las versiones más recientes de Astro puede cambiar de dónde se importa `z` (zod) y la forma del loader. Revisa la documentación oficial de *Content collections* de la versión instalada.
+
+### 3.1 Tailwind CSS
+
+**Integración.** Con Tailwind v4 se usa el plugin de Vite (`@tailwindcss/vite`) dentro de `astro.config.mjs`. No existe `tailwind.config.js`: la configuración vive en CSS, en `src/styles/global.css`, con la directiva `@theme`. Confirma el método vigente en la documentación de Astro y de Tailwind al instalar, porque la integración `@astrojs/tailwind` corresponde a Tailwind v3.
+
+**Reglas de uso en este proyecto**
+
+1. **Un solo tema oscuro.** No se usan variantes `dark:`. Los colores base ya son oscuros y se declara `color-scheme: dark`.
+2. **Paleta cerrada.** Se vacía la paleta por defecto (`--color-*: initial;`) y solo existen los colores de la marca. Así no se cuelan colores sin contraste verificado.
+3. **Tokens en `@theme`.** Colores, fuentes, tamaños de texto, radios y sombras de la guía de estilo se traducen a variables de tema y generan utilidades (`bg-fondo`, `text-texto`, `font-display`, `shadow-dura`).
+4. **Espaciado.** La escala por defecto de Tailwind (base de 4 px) coincide con la de la guía. Se usan las utilidades estándar:
+
+   | Guía | `--e-1` | `--e-2` | `--e-3` | `--e-4` | `--e-5` | `--e-6` | `--e-7` | `--e-8` | `--e-9` |
+   |---|---|---|---|---|---|---|---|---|---|
+   | Tailwind | `1` | `2` | `3` | `4` | `6` | `8` | `12` | `16` | `24` |
+
+5. **Puntos de quiebre.** Se ajustan a los de la guía: `sm` 640 px (por defecto), `md` 960 px (`60rem`) y `lg` 1200 px (`75rem`).
+6. **Componentes como componentes de Astro**, no como clases con `@apply`. Un patrón repetido (tarjeta, chip, botón) se resuelve con un componente `.astro` que concentra las clases.
+7. **Decoración "hecha a mano"** (`clip-path` de cinta y papel rasgado, rotaciones) va en `global.css` como clases propias o con valores arbitrarios. Los polígonos largos no se escriben en línea.
+8. **Cuerpo de artículos (`.prose`)** en `src/styles/prose.css`, con CSS propio sobre las variables del tema. Así se controlan subrayados, viñetas y citas según la guía. `@tailwindcss/typography` es una alternativa si se prefiere, pero obliga a sobrescribir bastante.
+9. **Orden de clases** consistente. Se recomienda `prettier-plugin-tailwindcss` para ordenarlas automáticamente.
+
+**Base de `src/styles/global.css` (referencia)**
+
+```css
+@import "tailwindcss";
+
+@theme {
+  /* Paleta cerrada: se elimina la de Tailwind */
+  --color-*: initial;
+
+  --color-fondo: #0F0D14;
+  --color-superficie: #1A1722;
+  --color-superficie-2: #26212F;
+  --color-borde: #6B6280;
+  --color-texto: #F2EEE6;
+  --color-texto-suave: #BFB8CC;
+  --color-tinta: #0F0D14;
+
+  --color-celeste: #4CC9F0;
+  --color-lima: #B6F23A;
+  --color-violeta: #B794F6;
+  --color-rosa: #FF7BC0;
+  --color-amarillo: #FFD93D;
+  --color-error: #FF8A80;
+
+  /* Tipografía */
+  --font-display: "Ranchers", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --font-acento: "DynaPuff", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --font-texto: "Nunito Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --text-hero: clamp(2.75rem, 1.5rem + 6vw, 5rem);
+  --text-hero--line-height: 1;
+
+  /* Forma */
+  --radius-s: 8px;
+  --radius-m: 16px;
+  --radius-l: 24px;
+  --shadow-dura: 6px 6px 0 #F2EEE6;
+  --shadow-dura-hover: 8px 8px 0 #F2EEE6;
+
+  /* Puntos de quiebre */
+  --breakpoint-md: 60rem;
+  --breakpoint-lg: 75rem;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: var(--font-texto);
+    font-synthesis: none;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-amarillo);
+    outline-offset: 3px;
+  }
+  ::selection {
+    background: var(--color-amarillo);
+    color: var(--color-tinta);
+  }
+}
+```
+
+La lista completa de tamaños (`--text-h1`, `--text-h2`, `--text-cuerpo`, etc.) y los componentes decorativos siguen la guía de estilo (secciones 4 a 6) y se agregan a este mismo archivo.
+
+**Carga de fuentes.** Se importan en `BaseLayout.astro` desde `@fontsource` (solo subset `latin`), no desde un CDN.
 
 ## 4. Mapa del sitio y rutas
 
@@ -149,17 +237,16 @@ pachamamicos/
 │  │  ├─ rss.xml.ts
 │  │  └─ 404.astro
 │  ├─ styles/
-│  │  ├─ tokens.css              # variables (color, tipografía, espacio)
-│  │  ├─ base.css                # reset, tipografía base, foco
-│  │  ├─ prose.css               # estilos del cuerpo de artículos
-│  │  └─ components.css          # o estilos con scope dentro de cada componente
+│  │  ├─ global.css              # @import "tailwindcss", @theme (tokens), capa base, decoración
+│  │  └─ prose.css               # estilos del cuerpo de artículos (.prose)
 │  └─ utils/
 │     ├─ reading-time.ts
 │     ├─ seo.ts                  # arma title, canonical, OG, JSON-LD
 │     └─ collections.ts          # filtros: sin borradores, orden por fecha
 ├─ astro.config.mjs
+├─ .prettierrc                   # con prettier-plugin-tailwindcss
 ├─ tsconfig.json
-└─ package.json
+└─ package.json                  # sin tailwind.config.js (Tailwind v4 se configura en CSS)
 ```
 
 ## 6. Configuración base
@@ -169,6 +256,7 @@ pachamamicos/
 ```js
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://pachamamicos.cl',
@@ -178,8 +266,22 @@ export default defineConfig({
   integrations: [
     sitemap({ filter: (page) => !page.includes('/404') }),
   ],
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });
 ```
+
+### Dependencias principales
+
+```bash
+npm install tailwindcss @tailwindcss/vite
+npm install @astrojs/sitemap @astrojs/rss
+npm install @fontsource/ranchers @fontsource-variable/dynapuff @fontsource-variable/nunito-sans
+npm install -D prettier prettier-plugin-tailwindcss
+```
+
+Verifica nombres y versiones en npm al instalar.
 
 ### `public/CNAME`
 
@@ -291,7 +393,7 @@ export const collections = { blog, guias, textos };
 ### Jerarquía de layouts
 
 ```
-BaseLayout        → <html lang="es-CL">, <head> (Seo, fuentes, tokens), Header, <main>, Footer
+BaseLayout        → <html lang="es-CL">, <head> (Seo, fuentes, global.css), Header, <main>, Footer
  ├─ ListLayout     → título de sección, color de sección, grilla de tarjetas, paginación
  ├─ ArticleLayout  → breadcrumb, cabecera, meta, TOC, cuerpo (.prose), fuentes, aporte, relacionados
  └─ PageLayout     → páginas institucionales con columna de lectura
@@ -372,7 +474,7 @@ No se agregan `FAQPage` ni `HowTo`: Google restringió su uso en resultados y no
 | CLS | < 0,1 |
 | INP | < 200 ms |
 | JavaScript propio por defecto | **0 KB** |
-| CSS total (gzip) | < 20 KB |
+| CSS total (gzip) | < 20 KB (Tailwind genera solo las clases usadas) |
 | Fuentes | ≤ 3 familias, subset `latin`, WOFF2, `font-display: swap`, solo se precargan las críticas |
 | Imagen de portada de artículo | < 100 KB |
 | Sprite SVG de iconos y stickers | < 20 KB |
@@ -534,7 +636,7 @@ Estas páginas también sostienen la señal de confianza (E-E-A-T) de un sitio f
 
 | Hito | Contenido | Resultado |
 |---|---|---|
-| **H0 · Base** | Configuración Astro, CNAME, workflow, tokens CSS, fuentes, `BaseLayout`, 404 | Sitio vacío publicado con identidad |
+| **H0 · Base** | Configuración Astro, Tailwind v4 con `@theme`, CNAME, workflow, fuentes, `BaseLayout`, 404 | Sitio vacío publicado con identidad |
 | **H1 · Plantillas** | Colecciones, `ArticleLayout`, `ListLayout`, tarjetas, Seo y JSON-LD, RSS y sitemap | Se puede publicar un artículo completo |
 | **H2 · Institucional** | Quiénes somos, Apoya, Afiliados, Privacidad, Contacto, portada | Sitio coherente y confiable |
 | **H3 · Contenido inicial** | 8–10 artículos (meta de los 2 primeros meses), Search Console, Cloudflare Analytics | Indexación en marcha |
@@ -563,6 +665,8 @@ Estas páginas también sostienen la señal de confianza (E-E-A-T) de un sitio f
 | D8 | Sin JS por defecto | Rendimiento y simplicidad |
 | D9 | Supabase solo en la fase del calendario | El blog no lo necesita |
 | D10 | URLs sin fecha, inmutables | GitHub Pages no tiene redirecciones del servidor |
+| D11 | Tailwind CSS v4 con tokens en `@theme` y paleta cerrada | Velocidad de desarrollo para una sola persona, CSS final mínimo, consistencia con la guía de estilo |
+| D12 | Componentes Astro en lugar de `@apply`; sin variantes `dark:` | Un solo tema oscuro; patrones repetidos viven en un único componente |
 
 ## 18. Riesgos y pendientes
 
@@ -572,5 +676,6 @@ Estas páginas también sostienen la señal de confianza (E-E-A-T) de un sitio f
 | Derechos de traducciones de textos clásicos | Usar traducción propia o de dominio público y declararlo en `traduccion` |
 | Instagram es una plataforma ajena | Sumar lista de correo en una fase posterior |
 | Dependencia de la comisión de Ko-fi, PayPal o Stripe | Verificar tarifas y soporte para Chile antes de activar |
-| Versiones de Astro y acciones de GitHub cambian | Revisar documentación oficial al implementar |
+| Versiones de Astro, Tailwind y acciones de GitHub cambian | Revisar documentación oficial al implementar; fijar versiones en `package.json` |
+| Clases utilitarias largas que dificultan leer el marcado | Componentes pequeños y `prettier-plugin-tailwindcss` |
 | Una sola persona mantiene todo | Plantillas, esquemas y checklists para reducir carga |

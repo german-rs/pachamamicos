@@ -1,0 +1,44 @@
+---
+import { site } from '../../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  home?: boolean;
+  type?: 'website' | 'article';
+  image?: string;
+  noindex?: boolean;
+}
+
+const { title, description, home = false, type = 'website', image, noindex = false } = Astro.props;
+
+const pageTitle = home ? title : `${title} · ${site.name}`;
+
+// URL canónica absoluta, con slash final (salvo archivos con extensión)
+let path = Astro.url.pathname;
+if (!path.endsWith('/') && !path.split('/').pop()?.includes('.')) path += '/';
+const canonical = new URL(path, Astro.site).href;
+
+const ogImage = image ? new URL(image, Astro.site).href : null;
+---
+
+<title>{pageTitle}</title>
+<meta name="description" content={description} />
+{noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#0F0D14" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<meta property="og:site_name" content={site.name} />
+<meta property="og:locale" content="es_CL" />
+<meta property="og:type" content={type} />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+{ogImage && <meta property="og:image" content={ogImage} />}
+
+<meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+{ogImage && <meta name="twitter:image" content={ogImage} />}
+
+<meta name="generator" content={Astro.generator} />
