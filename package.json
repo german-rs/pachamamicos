@@ -12,8 +12,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@fontsource-variable/dynapuff": "^5.3.0",
     "@fontsource-variable/nunito-sans": "^5.3.0",
+    "@fontsource/anton": "^5.3.0",
     "@fontsource/ranchers": "^5.3.0",
     "@tailwindcss/vite": "^4.3.4",
     "astro": "^7.4.2",

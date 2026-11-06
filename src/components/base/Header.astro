@@ -31,8 +31,10 @@ const activo = (href: string) => path.startsWith(href);
 
     <!-- Móvil: sin JavaScript, con <details> -->
     <details class="group md:hidden">
+       <!-- se agrega texto-ui text-base, si la prueba sale correcta se quedan-->
       <summary
-        class="flex min-h-11 cursor-pointer list-none items-center rounded-full border-2 border-texto px-5 font-titulo font-semibold [&::-webkit-details-marker]:hidden"
+       
+        class="flex min-h-11 font-titulo font-semibold cursor-pointer list-none items-center rounded-full border-2 border-texto px-5 texto-ui text-base [&::-webkit-details-marker]:hidden"
       >
         <span class="group-open:hidden">Menú</span>
         <span class="hidden group-open:inline">Cerrar</span>
@@ -48,7 +50,7 @@ const activo = (href: string) => path.startsWith(href);
               <a
                 href={item.href}
                 aria-current={activo(item.href) ? 'page' : undefined}
-                class="flex min-h-12 items-center font-titulo text-h3 font-semibold hover:text-amarillo"
+                class="flex min-h-12 items-center texto-ui text-h3 hover:text-amarillo"
               >
                 {item.label}
               </a>
