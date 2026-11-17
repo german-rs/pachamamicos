@@ -1,9 +1,12 @@
 ---
 import { nav } from '../../data/site';
+import type { NavItem, NavGroup } from '../../data/site';
 import Boton from '../ui/Boton.astro';
 
 const path = Astro.url.pathname;
 const activo = (href: string) => path.startsWith(href);
+const esGrupo = (item: NavItem): item is NavGroup => 'children' in item;
+const grupoActivo = (g: NavGroup) => g.children.some((c) => activo(c.href));
 ---
 
 <header class="relative border-b border-borde bg-fondo">
@@ -14,51 +17,101 @@ const activo = (href: string) => path.startsWith(href);
 
     <!-- Escritorio -->
     <nav class="hidden items-center gap-6 md:flex" aria-label="Principal">
-      {nav.map((item) => (
-        <a
-          href={item.href}
-          aria-current={activo(item.href) ? 'page' : undefined}
-          class:list={[
-            'py-2 font-titulo font-semibold hover:text-amarillo',
-            activo(item.href) && `underline decoration-wavy decoration-2 underline-offset-8 ${item.color}`,
-          ]}
-        >
-          {item.label}
-        </a>
-      ))}
-    <Boton href="/apoya/">Apoya</Boton>
+      {nav.map((item) =>
+        esGrupo(item) ? (
+          <details class="group relative">
+            <summary
+              class:list={[
+                'flex cursor-pointer list-none items-center gap-1 py-2 font-titulo font-semibold hover:text-amarillo [&::-webkit-details-marker]:hidden',
+                grupoActivo(item) && `underline decoration-wavy decoration-2 underline-offset-8 ${item.color}`,
+              ]}
+            >
+              {item.label}
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                class="size-5 fill-none stroke-current stroke-2 transition-transform group-open:rotate-180 motion-reduce:transition-none"
+              >
+                <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </summary>
+            <ul class="absolute left-0 top-full z-40 mt-2 min-w-48 rounded-m border-2 border-borde bg-superficie p-2 shadow-dura">
+              {item.children.map((hijo) => (
+                <li>
+                  <a
+                    href={hijo.href}
+                    aria-current={activo(hijo.href) ? 'page' : undefined}
+                    class:list={[
+                      'flex min-h-11 items-center rounded-s px-3 font-titulo font-semibold hover:text-amarillo',
+                      activo(hijo.href) && `underline decoration-wavy decoration-2 underline-offset-8 ${hijo.color}`,
+                    ]}
+                  >
+                    {hijo.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        ) : (
+          <a
+            href={item.href}
+            aria-current={activo(item.href) ? 'page' : undefined}
+            class:list={[
+              'py-2 font-titulo font-semibold hover:text-amarillo',
+              activo(item.href) && `underline decoration-wavy decoration-2 underline-offset-8 ${item.color}`,
+            ]}
+          >
+            {item.label}
+          </a>
+        )
+      )}
+      <Boton href="/apoya/">Apoya</Boton>
     </nav>
 
     <!-- Móvil: sin JavaScript, con <details> -->
     <details class="group md:hidden">
-       <!-- se agrega texto-ui text-base, si la prueba sale correcta se quedan-->
       <summary
-       
-        class="flex min-h-11 font-titulo font-semibold cursor-pointer list-none items-center rounded-full border-2 border-texto px-5 texto-ui text-base [&::-webkit-details-marker]:hidden"
+        class="flex min-h-11 cursor-pointer list-none items-center rounded-full border-2 border-texto px-5 font-titulo text-base font-semibold texto-ui [&::-webkit-details-marker]:hidden"
       >
         <span class="group-open:hidden">Menú</span>
         <span class="hidden group-open:inline">Cerrar</span>
       </summary>
 
-      <nav
-        class="absolute inset-x-0 top-full z-40 border-b border-borde bg-superficie px-5 py-4"
-        aria-label="Principal"
-      >
+      <nav class="absolute inset-x-0 top-full z-40 border-b border-borde bg-superficie px-5 py-4" aria-label="Principal">
         <ul class="flex flex-col">
-          {nav.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                aria-current={activo(item.href) ? 'page' : undefined}
-                class="flex min-h-12 items-center texto-ui text-h3 hover:text-amarillo"
-              >
-                {item.label}
-              </a>
-            </li>
-          ))}
-            <li class="pt-3">
-                <Boton href="/apoya/">Apoya pachamamicos</Boton>
-            </li>
+          {nav.map((item) =>
+            esGrupo(item) ? (
+              <li>
+                <p class="pt-2 font-titulo text-chico font-semibold uppercase text-texto-suave">{item.label}</p>
+                <ul>
+                  {item.children.map((hijo) => (
+                    <li>
+                      <a
+                        href={hijo.href}
+                        aria-current={activo(hijo.href) ? 'page' : undefined}
+                        class="flex min-h-12 items-center pl-3 texto-ui text-h3 hover:text-amarillo"
+                      >
+                        {hijo.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ) : (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={activo(item.href) ? 'page' : undefined}
+                  class="flex min-h-12 items-center texto-ui text-h3 hover:text-amarillo"
+                >
+                  {item.label}
+                </a>
+              </li>
+            )
+          )}
+          <li class="pt-3">
+            <Boton href="/apoya/">Apoya pachamamicos</Boton>
+          </li>
         </ul>
       </nav>
     </details>
