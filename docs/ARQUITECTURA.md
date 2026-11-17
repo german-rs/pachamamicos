@@ -405,7 +405,7 @@ BaseLayout        → <html lang="es-CL">, <head> (Seo, fuentes, global.css), He
 |---|---|---|
 | `Seo.astro` | `<title>`, description, canonical, Open Graph, Twitter Card, `robots` | No |
 | `JsonLd.astro` | Datos estructurados (ver sección 9) | No |
-| `Header.astro` | Logo, navegación, enlace de aporte. Menú móvil con `<details>` | No |
+| `Header.astro` | Logo, navegación con grupo desplegable "Leer" (Blog, Guías, Textos), enlace de aporte. Menús de escritorio y móvil con `<details>` | No |
 | `Tarjeta.astro` | Tarjeta de artículo, color según sección | No |
 | `Meta.astro` | Equipo Pachamamicos · fecha · actualizado · tiempo de lectura | No |
 | `Toc.astro` | Índice con `<details>`, se genera de los encabezados | No |
@@ -667,6 +667,7 @@ Estas páginas también sostienen la señal de confianza (E-E-A-T) de un sitio f
 | D10 | URLs sin fecha, inmutables | GitHub Pages no tiene redirecciones del servidor |
 | D11 | Tailwind CSS v4 con tokens en `@theme` y paleta cerrada | Velocidad de desarrollo para una sola persona, CSS final mínimo, consistencia con la guía de estilo |
 | D12 | Componentes Astro en lugar de `@apply`; sin variantes `dark:` | Un solo tema oscuro; patrones repetidos viven en un único componente |
+| D13 | Menú con ítem agrupador "Leer" (Blog, Guías, Textos); se mantienen las tres colecciones y sus URL | Liberar espacio en el header para futuras secciones sin reestructurar contenido, esquemas ni URL. D2, D7 y D10 siguen vigentes |
 
 ## 18. Riesgos y pendientes
 

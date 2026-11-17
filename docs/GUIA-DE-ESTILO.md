@@ -429,9 +429,14 @@ Fondo en el color de la sección, texto `--tinta`, sombra dura, giro leve, cinta
 ### 8.4 Encabezado y navegación
 
 - Fondo `--fondo`, borde inferior de 1 px `--borde`.
-- Izquierda: logo. Derecha: Blog · Guías · Textos · Quiénes somos · botón **Apoya** (amarillo).
-- Móvil: botón "Menú" que abre un `<details>` a pantalla completa con enlaces grandes (mínimo 48 px de alto).
-- Enlace de la sección activa con subrayado ondulado del color de la sección.
+- Izquierda: logo. Derecha: **Leer ▾** (Blog · Guías · Textos) · Quiénes somos · botón **Apoya** (amarillo).
+- **"Leer" es un grupo desplegable** hecho con `<details>`, sin JavaScript. El panel usa fondo `--superficie`, borde de 2 px `--borde`, radio `--radio-m` y sombra dura; cada enlace tiene un alto mínimo de 44 px. El chevron gira al abrir y respeta `prefers-reduced-motion`.
+- Limitación asumida: el panel no se cierra con clic fuera ni con Escape. Se cierra al pulsar "Leer" de nuevo o al navegar. Se acepta para mantener 0 KB de JS (ver D8).
+- Móvil: botón "Menú" que abre un `<details>` a pantalla completa con enlaces grandes (mínimo 48 px de alto). "Leer" aparece como etiqueta y sus tres enlaces quedan visibles, sin anidar otro `<details>`.
+- Enlace activo con subrayado ondulado del color de su sección (celeste, lima o violeta). Si la página activa está dentro de "Leer", el grupo se subraya en `--texto`, y dentro del panel se subraya el enlace de la sección.
+- Las secciones nuevas que se sumen a la barra se agregan como ítems o como hijos de un grupo, según su peso, para mantener el header con 3–4 elementos como máximo.
+
+
 
 ### 8.5 Pie de página
 

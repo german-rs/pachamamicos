@@ -13,7 +13,7 @@ export type NavItem = NavLink | NavGroup;
 export const nav: NavItem[] = [
   {
     label: 'Leer',
-    color: 'decoration-amarillo',
+    color: 'decoration-texto',
     children: [
       { label: 'Blog', href: '/blog/', color: 'decoration-celeste' },
       { label: 'Guías', href: '/guias/', color: 'decoration-lima' },
