@@ -1,0 +1,17 @@
+---
+// src/components/base/Logo.astro
+interface Props {
+  tono?: 'oscuro' | 'claro';
+  class?: string;
+}
+
+const { tono = 'oscuro', class: clase = '' } = Astro.props;
+
+const palabra = { oscuro: 'text-texto', claro: 'text-tinta' } as const;
+const punto = { oscuro: 'bg-lima', claro: 'bg-tinta' } as const;
+---
+
+<span class:list={['inline-flex items-center gap-2 font-display leading-none', palabra[tono], clase]}>
+  <span aria-hidden="true" class:list={['size-[0.5em] shrink-0 rounded-full', punto[tono]]}></span>
+  pachamamicos
+</span>

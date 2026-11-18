@@ -1,6 +1,6 @@
 # Pachamamicos · Documentación de arquitectura
 
-> **Versión:** 1.1 (incorpora Tailwind CSS) · **Fase:** 1 (blog) · **Sitio:** https://pachamamicos.cl · **Repo:** german-rs/pachamamicos
+> **Versión:** 1.3 (logo wordmark con punto lima) · **Fase:** 1 (blog) · **Sitio:** https://pachamamicos.cl · **Repo:** german-rs/pachamamicos
 > **Documento hermano:** [`GUIA-DE-ESTILO.md`](./GUIA-DE-ESTILO.md)
 
 ---
@@ -200,7 +200,7 @@ pachamamicos/
 │  ├─ assets/
 │  │  └─ img/                    # imágenes procesadas por astro:assets
 │  ├─ components/
-│  │  ├─ base/                   # Header, Footer, SkipLink, Seo, JsonLd
+│  │  ├─ base/                   # Header, Footer, SkipLink, Seo, JsonLd, Logo
 │  │  ├─ ui/                     # Boton, Chip, Tarjeta, Callout, Cinta, Sticker
 │  │  ├─ article/                # Meta, Toc, Fuentes, AvisoAfiliado, BloqueAporte, Relacionados
 │  │  └─ icons/                  # sprite.svg + <Icono name="" />
@@ -406,6 +406,7 @@ BaseLayout        → <html lang="es-CL">, <head> (Seo, fuentes, global.css), He
 | `Seo.astro` | `<title>`, description, canonical, Open Graph, Twitter Card, `robots` | No |
 | `JsonLd.astro` | Datos estructurados (ver sección 9) | No |
 | `Header.astro` | Logo, navegación con grupo desplegable "Leer" (Blog, Guías, Textos), enlace de aporte. Menús de escritorio y móvil con `<details>` | No |
+| `Logo.astro` | Wordmark "pachamamicos" en Ranchers con punto lima. Prop `tono`: `oscuro` (crema y lima) o `claro` (todo tinta). Lo usan Header y Footer | No |
 | `Tarjeta.astro` | Tarjeta de artículo, color según sección | No |
 | `Meta.astro` | Equipo Pachamamicos · fecha · actualizado · tiempo de lectura | No |
 | `Toc.astro` | Índice con `<details>`, se genera de los encabezados | No |
@@ -668,6 +669,7 @@ Estas páginas también sostienen la señal de confianza (E-E-A-T) de un sitio f
 | D11 | Tailwind CSS v4 con tokens en `@theme` y paleta cerrada | Velocidad de desarrollo para una sola persona, CSS final mínimo, consistencia con la guía de estilo |
 | D12 | Componentes Astro en lugar de `@apply`; sin variantes `dark:` | Un solo tema oscuro; patrones repetidos viven en un único componente |
 | D13 | Menú con ítem agrupador "Leer" (Blog, Guías, Textos); se mantienen las tres colecciones y sus URL | Liberar espacio en el header para futuras secciones sin reestructurar contenido, esquemas ni URL. D2, D7 y D10 siguen vigentes |
+| D14 | Logo: solo el wordmark "pachamamicos" en Ranchers, minúsculas y sin efectos, con un punto lima a la izquierda que es también el favicon. Dos tonos: crema y lima sobre oscuro, tinta sobre color | El nombre ya es expresivo; menos complejidad, cero ilustración y un mismo elemento para logo y favicon. Reemplaza el concepto de carita-sol de la guía v1.1 |
 
 ## 18. Riesgos y pendientes
 

@@ -1,6 +1,7 @@
 ---
 import { nav } from '../../data/site';
 import type { NavItem, NavGroup } from '../../data/site';
+import Logo from './Logo.astro';
 import Boton from '../ui/Boton.astro';
 
 const path = Astro.url.pathname;
@@ -11,8 +12,8 @@ const grupoActivo = (g: NavGroup) => g.children.some((c) => activo(c.href));
 
 <header class="relative border-b border-borde bg-fondo">
   <div class="mx-auto flex max-w-contenido items-center justify-between gap-4 px-5 py-3 md:px-8">
-    <a href="/" class="font-logo text-3xl leading-none text-lima" aria-label="Pachamamicos, ir al inicio">
-      pachamamicos
+    <a href="/" class="font-logo text-3xl leading-none text-texto" aria-label="Pachamamicos, ir al inicio">
+      <Logo />
     </a>
 
     <!-- Escritorio -->

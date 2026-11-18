@@ -1,13 +1,16 @@
 ---
 import { site, institucional, instagram } from '../../data/site';
 import Boton from '../ui/Boton.astro';
+import Logo from './Logo.astro';
 const year = new Date().getFullYear();
 ---
 
 <footer class="mt-24 border-t border-borde bg-superficie">
   <div class="mx-auto grid max-w-contenido gap-10 px-5 py-12 md:grid-cols-3 md:px-8">
     <div>
-      <p class="font-logo text-3xl leading-none text-lima">pachamamicos</p>
+      <p class="font-logo text-3xl leading-none text-texto">
+        <Logo />
+      </p>
       <p class="mt-4 max-w-xs text-chico text-texto-suave">
         Eventos, guías y textos de meditación y mindfulness en Chile. Hecho con cariño por el Equipo Pachamamicos.
       </p>

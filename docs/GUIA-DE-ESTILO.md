@@ -1,6 +1,6 @@
 # Pachamamicos · Guía de estilo
 
-> **Versión:** 1.1 (adaptada a Tailwind CSS v4) · **Aplica a:** sitio web (Fase 1, blog) · **Tema:** oscuro, único
+>**Versión:** 1.3 (logo: wordmark con punto lima) · **Aplica a:** sitio web (Fase 1, blog) · **Tema:** oscuro, único
 > **Documento hermano:** [`ARQUITECTURA.md`](./ARQUITECTURA.md)
 
 ---
@@ -98,7 +98,7 @@ El nombre sugiere un guiño andino. Se resuelve con **nombre, tono y calidez**, 
 | Color | Asignado a | Notas |
 |---|---|---|
 | **Celeste** | Blog | Tarjetas, cabecera de sección, chips |
-| **Lima** | Guías | |
+| **Lima** | Guías y color de marca | Es el color de sección de Guías y el punto del logo sobre fondo oscuro. El punto del logo no indica sección |
 | **Violeta** | Textos comentados | |
 | **Rosa** | Eventos (reservado, Fase calendario) | No usar todavía como color de sección |
 | **Amarillo** | **Aporte voluntario** y acciones principales | Es el color "de acción". Se evita usarlo como decoración suelta para que conserve su peso |
@@ -348,29 +348,41 @@ Reglas: giro máximo ±2°, el hover quita el giro, y con `prefers-reduced-motio
 
 ### 6.5 Stickers sugeridos (en SVG propio)
 
-Carita-sol, estrella, rayo, corazón, ojo, flecha doodle, subrayado ondulado, círculo de resaltado. Líneas gruesas, contorno `--tinta`, relleno en acentos, formas simples. Cuatro o cinco bastan para toda la fase 1.
+Estrella, rayo, corazón, ojo, flecha doodle, subrayado ondulado, círculo de resaltado. Líneas gruesas, contorno `--tinta`, relleno en acentos, formas simples. Cuatro o cinco bastan para toda la fase 1. El logo no usa stickers ni mascota.
 
 ## 7. Logo e iconografía
 
-### 7.1 Logo (concepto)
+### 7.1 Logo
 
-- **Wordmark:** "pachamamicos" en **Ranchers**, minúsculas, letras en `--lima` o `--amarillo` con contorno `--tinta` y sombra dura crema, con una rotación de -2°.
-- **Símbolo:** una **carita-sol** (círculo amarillo con dos ojos y sonrisa), que representa calidez, luz y comunidad. Funciona como favicon, avatar de Instagram y sticker recurrente.
-- **Versiones:** horizontal (símbolo + wordmark), solo símbolo, y wordmark simple en crema para fondos de color.
-- **Zona de respeto:** el alto de la "p" alrededor.
-- **Tamaño mínimo:** símbolo 24 px, wordmark 96 px de ancho.
-- **Entregables:** SVG; el favicon es un único SVG de menos de 1 KB.
+El logo es **solo el nombre**, sin símbolo aparte. La tipografía ya es expresiva; no se le agrega nada más.
 
-Favicon de partida (editable):
+- **Wordmark:** "pachamamicos" en **Ranchers**, siempre en minúsculas. Sin rotación, sin contorno, sin sombra dura y sin inclinar las letras.
+- **Punto:** un círculo `--lima` a la izquierda de la palabra. Evoca "en línea" y comunidad activa. Es **estático** (sin pulso ni animación, ver sección 10) y es también el favicon.
+- **Proporciones de partida:** diámetro del punto ≈ 0,4 em, separación con la palabra ≈ 0,3 em, centrado verticalmente sobre las minúsculas. Se validan con la fuente real (ver sección 15).
+
+**Versiones de color (solo dos)**
+
+| Fondo | Palabra | Punto |
+|---|---|---|
+| Oscuro (`--fondo`, `--superficie`) | `--texto` (crema) | `--lima` |
+| Bloques de color (lima, celeste, violeta, rosa, amarillo) y fondos claros | `--tinta` | `--tinta` |
+
+Sobre un bloque de color el punto va en tinta: un punto lima sobre lima desaparece y junto a celeste o violeta vibra (ver 3.5). No se usa el logo en ningún otro color.
+
+- **Zona de respeto:** el alto de la "h" alrededor del logo.
+- **Tamaño mínimo:** 96 px de ancho.
+- **No se hace:** rotarlo, contornearlo, sombrearlo, pasarlo a un acento, animar el punto ni agregarle símbolos.
+- **Implementación:** componente `Logo.astro`, usado en el encabezado y el pie. La palabra es texto real (no imagen), con el punto `aria-hidden="true"`.
+
+**Favicon:** el círculo lima, sin borde, en un único SVG de menos de 1 KB.
 
 ```svg
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <circle cx="32" cy="32" r="28" fill="#FFD93D" stroke="#0F0D14" stroke-width="4"/>
-  <circle cx="23" cy="26" r="3.5" fill="#0F0D14"/>
-  <circle cx="41" cy="26" r="3.5" fill="#0F0D14"/>
-  <path d="M19 38c3 8 23 8 26 0" fill="none" stroke="#0F0D14" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="32" cy="32" r="28" fill="#B6F23A"/>
 </svg>
 ```
+
+> El lima es claro: sobre una pestaña de navegador clara se ve más débil. Si al probarlo no se distingue, la alternativa es agregarle un borde fino `--tinta`. Para `apple-touch-icon` (180×180 px) conviene el círculo sobre fondo `--fondo`, porque iOS rellena la transparencia.
 
 ### 7.2 Iconos
 
@@ -429,7 +441,7 @@ Fondo en el color de la sección, texto `--tinta`, sombra dura, giro leve, cinta
 ### 8.4 Encabezado y navegación
 
 - Fondo `--fondo`, borde inferior de 1 px `--borde`.
-- Izquierda: logo. Derecha: **Leer ▾** (Blog · Guías · Textos) · Quiénes somos · botón **Apoya** (amarillo).
+- Izquierda: logo (palabra en `--texto`, punto `--lima`). Derecha: **Leer ▾** (Blog · Guías · Textos) · Quiénes somos · botón **Apoya** (amarillo).
 - **"Leer" es un grupo desplegable** hecho con `<details>`, sin JavaScript. El panel usa fondo `--superficie`, borde de 2 px `--borde`, radio `--radio-m` y sombra dura; cada enlace tiene un alto mínimo de 44 px. El chevron gira al abrir y respeta `prefers-reduced-motion`.
 - Limitación asumida: el panel no se cierra con clic fuera ni con Escape. Se cierra al pulsar "Leer" de nuevo o al navegar. Se acepta para mantener 0 KB de JS (ver D8).
 - Móvil: botón "Menú" que abre un `<details>` a pantalla completa con enlaces grandes (mínimo 48 px de alto). "Leer" aparece como etiqueta y sus tres enlaces quedan visibles, sin anidar otro `<details>`.
@@ -523,7 +535,7 @@ Se implementan en `src/styles/prose.css` con CSS propio sobre las variables del 
 
 ### 9.4 Portada del sitio (estructura sugerida)
 
-1. **Hero** con fondo `--fondo`, titular Ranchers grande, frase de una línea, dos botones (explorar guías, apoyar), carita-sol y cintas.
+1. **Hero** con fondo `--fondo`, titular Ranchers grande, frase de una línea, dos botones (explorar guías, apoyar), cintas y stickers.
 2. **Empieza aquí:** 3 tarjetas grandes de colores (Blog, Guías, Textos), inspiradas en Lollapalooza.
 3. **Lo último:** grilla de las 6 piezas más recientes.
 4. **Guía destacada** en un bloque de color con borde rasgado.
@@ -736,7 +748,8 @@ Antes de dar por terminada una página:
 | Sombra dura crema | Ver si se siente muy fuerte sobre fondo oscuro; alternativa: acento de la sección |
 | Ranchers en títulos largos | Probar con 3 títulos reales y ajustar tamaño |
 | Nunito Sans vs Atkinson Hyperlegible | Elegir según peso y lectura en móvil |
-| Carita-sol como mascota | Validar que transmite calidez sin infantilizar |
+| Punto del logo en pestañas claras | Ver si el lima se distingue; alternativa: borde fino `--tinta` |
+| Proporciones del punto (0,4 em / 0,3 em) | Ajustar a ojo con Ranchers real, en 96 px y en el encabezado |
 | Mayúsculas en chips | Comprobar legibilidad en 13 px |
 | Prose propio vs `@tailwindcss/typography` | Decidir al armar la primera plantilla de artículo |
 

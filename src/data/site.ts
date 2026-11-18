@@ -1,10 +1,11 @@
 export const site = {
-  name: 'Pachamamicos',
+  name: 'pachamamicos',
   url: 'https://pachamamicos.cl',
   locale: 'es-CL',
   description:
     'Guías para empezar, textos clásicos comentados y eventos de meditación y mindfulness en Santiago. Hecho por una comunidad.',
 };
+
 
 export type NavLink = { label: string; href: string; color: string };
 export type NavGroup = { label: string; color: string; children: NavLink[] };
